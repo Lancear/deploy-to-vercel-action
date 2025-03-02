@@ -94,6 +94,9 @@ const context = {
     key: "RUNTIME_ENV",
     type: "array",
   }),
+  VERCEL_ENV: parser.getInput({
+    key: "VERCEL_ENV"
+  }),
   PREBUILT: parser.getInput({
     key: "PREBUILT",
     type: "boolean",
