@@ -32,7 +32,7 @@ const init = () => {
 		let commandArguments = [ `--token=${ VERCEL_TOKEN }` ]
 
 		if (VERCEL_ENV) {
-			commandArguments.push(`--target=${ VERCEL_TOKEN }`)
+			commandArguments.push(`--target=${ VERCEL_ENV }`)
 		}
 
 		if (VERCEL_SCOPE) {
