@@ -79,6 +79,10 @@ inputs:
     description: |
       Provide environment variables to the runtime step.
     required: false
+  VERCEL_ENV:
+    description: |
+      Provide Vercel Target Environment.
+    required: false
   WORKING_DIRECTORY:
     description: |
       Working directory for the Vercel CLI.

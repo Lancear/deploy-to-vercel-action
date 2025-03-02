@@ -15980,6 +15980,9 @@ const context = {
     key: "RUNTIME_ENV",
     type: "array",
   }),
+  VERCEL_ENV: parser.getInput({
+    key: "VERCEL_ENV"
+  }),
   PREBUILT: parser.getInput({
     key: "PREBUILT",
     type: "boolean",
@@ -16255,6 +16258,7 @@ const {
 	TRIM_COMMIT_MESSAGE,
 	BUILD_ENV,
 	RUNTIME_ENV,
+	VERCEL_ENV,
 	PREBUILT,
 	WORKING_DIRECTORY,
 	FORCE
@@ -16269,6 +16273,10 @@ const init = () => {
 
 	const deploy = async (commit) => {
 		let commandArguments = [ `--token=${ VERCEL_TOKEN }` ]
+
+		if (VERCEL_ENV) {
+			commandArguments.push(`--target=${ VERCEL_TOKEN }`)
+		}
 
 		if (VERCEL_SCOPE) {
 			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
@@ -16317,7 +16325,7 @@ const init = () => {
 			})
 		}
 
-		core.info('Starting deploy with Vercel CLI')
+		core.info(`Starting deploy with Vercel CLI, target environment: ${VERCEL_ENV}`)
 		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
 		const parsed = output.match(/(?<=https?:\/\/)(.*)/g)[0]
 
