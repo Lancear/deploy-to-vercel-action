@@ -16106,7 +16106,7 @@ const init = () => {
 		return deploymentStatus.data
 	}
 
-	const deleteExistingComment = async () => {
+	const deleteExistingComment = async (searchText) => {
 		const { data } = await client.issues.listComments({
 			owner: USER,
 			repo: REPOSITORY,
@@ -16115,7 +16115,8 @@ const init = () => {
 
 		if (data.length < 1) return
 
-		const comment = data.find((comment) => comment.body.includes('This pull request has been deployed to Vercel.'))
+		const comment = data.find((comment) => comment.body.includes(searchText))
+
 		if (comment) {
 			await client.issues.deleteComment({
 				owner: USER,
@@ -16591,7 +16592,8 @@ const {
 	LOG_URL,
 	DEPLOY_PR_FROM_FORK,
 	IS_FORK,
-	ACTOR
+	ACTOR,
+	VERCEL_PROJECT_ID
 } = __nccwpck_require__(4570)
 
 // Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break the URL.
@@ -16712,7 +16714,7 @@ const run = async () => {
 		if (IS_PR) {
 			if (DELETE_EXISTING_COMMENT) {
 				core.info('Checking for existing comment on PR')
-				const deletedCommentId = await github.deleteExistingComment()
+				const deletedCommentId = await github.deleteExistingComment(`<!-- ${VERCEL_PROJECT_ID} Deployment Status -->`)
 
 				if (deletedCommentId) core.info(`Deleted existing comment #${ deletedCommentId }`)
 			}
@@ -16738,6 +16740,7 @@ const run = async () => {
 					</table>
 
 					[View Workflow Logs](${ LOG_URL })
+					<!-- ${VERCEL_PROJECT_ID} Deployment Status -->
 				`
 
 				const comment = await github.createComment(body)
